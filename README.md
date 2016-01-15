@@ -1,3 +1,5 @@
+[[Build Status](https://travis-ci.org/oldenbur/sql-parser.svg?branch=master)]
+
 ## SQL Parser
 
 This repository contains a toy parser for parsing very simple SQL SELECT statements.
