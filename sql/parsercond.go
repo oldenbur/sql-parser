@@ -4,7 +4,9 @@ import (
 	"fmt"
 )
 
-type Cond interface{}
+type Cond interface{
+	String() string
+}
 
 // CondComp represents a single comparison, e.g. f = 'bucky'
 type CondComp struct {
@@ -14,8 +16,8 @@ type CondComp struct {
 }
 
 func (c CondComp) String() string {
-	return fmt.Sprintf("%s", c.Ident)
-//	return fmt.Sprintf("Comp{%s %s %s}", c.Ident, c.CondOp, c.Val)
+//	return fmt.Sprintf("%s", c.Ident)
+	return fmt.Sprintf("%s %s %s", c.Ident, c.CondOp, c.Val)
 }
 
 // CondConj represents a single level of ANDed or ORed statements,
@@ -32,6 +34,11 @@ func (c CondConj) String() string {
 	return fmt.Sprintf("(%s %s %s)", c.Left, c.Op, c.Right)
 }
 
+// parseCondTree assumes that the scanner is in position to parse a potentially
+// compound boolean expression, e.g.
+//   t1.field1 = "val1" AND (t2.field1 <= -12.34 OR t1.field2 != "val2")
+// If parsing is successful, a populated Cond tree structure representing the
+// parsed expression is returned, otherwise error.
 func (p *Parser) parseCondTree() (Cond, error) {
 
 	var left, right Cond
@@ -44,7 +51,11 @@ func (p *Parser) parseCondTree() (Cond, error) {
 			return nil, err
 		}
 	} else if tok == IDENT {
-		left = &CondComp{Ident: lit}
+		p.unscan()
+		left, err = p.parseCondComp()
+		if err != nil {
+			return nil, err
+		}
 	} else {
 		return nil, fmt.Errorf(`expeected PAREN_L or IDENT, got "%s"`, lit)
 	}
@@ -71,4 +82,34 @@ func (p *Parser) parseCondTree() (Cond, error) {
 	}
 
 	return left, nil
+}
+
+// parseCondComp assumes that the scanner is in the position to parse a condition
+// expression, e.g. t1.field1 = "stringval". If parsing is successful, a populated
+// CondComp structure is returned, otherwise an error.
+func (p *Parser) parseCondComp() (*CondComp, error) {
+
+	var ident, val string
+	var op Token
+
+	tok, ident := p.scanIgnoreWhitespace()
+	if tok != IDENT {
+		return nil, fmt.Errorf(`expected IDENT, got "%s"`, ident)
+	}
+
+	op, lit := p.scanIgnoreWhitespace()
+	if !isOperator(op) {
+		return nil, fmt.Errorf(`expected operator, got "%s"`, lit)
+	}
+
+	tok, val = p.scanIgnoreWhitespace()
+	if tok != STRING && tok != NUMBER {
+		return nil, fmt.Errorf(`expected NUMBER or STRING, got "%s"`, val)
+	}
+
+	return &CondComp{Ident: ident, CondOp: op, Val: val}, nil
+}
+
+func isOperator(tok Token) bool {
+	return tok == EQ || tok == NE || tok == LT || tok == GT || tok == LE || tok == GE
 }
