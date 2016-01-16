@@ -5,7 +5,6 @@
 This repository contains a toy parser for parsing very simple SQL SELECT statements.
 
 #### TODO:
-   * condition statements
    * Elastigo integration:
       * index/item mapping info for field validation
       * queries
