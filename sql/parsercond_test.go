@@ -16,62 +16,92 @@ func TestParserCond(t *testing.T) {
 	defer log.Flush()
 
 	Convey("Test parsing basic conditions\n", t, func() {
-		p := NewParser(strings.NewReader(`A`))
+		p := NewParser(strings.NewReader(`A = "a"`))
 		c, err := p.parseCondTree()
 		So(err, ShouldBeNil)
-		So(c, ShouldResemble, &CondComp{Ident:"A"})
+		So(c, ShouldResemble, &CondComp{Ident:"A", CondOp: EQ, Val: `"a"`})
 		log.Debugf("cond: %s", c)
 
-		p = NewParser(strings.NewReader(`A AND B`))
-		c, err = p.parseCondTree()
-		So(err, ShouldBeNil)
-		So(c, ShouldResemble, &CondConj{Left: &CondComp{Ident:"A"}, Op: AND, Right: &CondComp{Ident:"B"}})
-		log.Debugf("cond: %s", c)
-
-		p = NewParser(strings.NewReader(`A AND B AND C AND D`))
-		c, err = p.parseCondTree()
-		So(err, ShouldBeNil)
-		So(c, ShouldResemble, &CondConj{Left: &CondComp{Ident:"A"}, Op: AND,
-			Right: &CondConj{Left: &CondComp{Ident:"B"}, Op: AND,
-				Right: &CondConj{Left: &CondComp{Ident:"C"}, Op: AND,
-					Right: &CondComp{Ident:"D"}}}})
-		log.Debugf("cond: %s", c)
-
-		p = NewParser(strings.NewReader(`(A AND B)`))
-		c, err = p.parseCondTree()
-		So(err, ShouldBeNil)
-		So(c, ShouldResemble, &CondConj{Left: &CondComp{Ident:"A"}, Op: AND, Right: &CondComp{Ident:"B"}})
-		log.Debugf("cond: %s", c)
-
-		p = NewParser(strings.NewReader(`(A AND B) OR C`))
+		p = NewParser(strings.NewReader(`t1.A != "a" AND t2.B >= -2345`))
 		c, err = p.parseCondTree()
 		So(err, ShouldBeNil)
 		So(c, ShouldResemble, &CondConj{
-			Left: &CondConj{Left: &CondComp{Ident:"A"}, Op: AND, Right: &CondComp{Ident:"B"}},
-			Op: OR,
-			Right: &CondComp{Ident:"C"},
-		})
+			Left: &CondComp{Ident:"t1.A", CondOp: NE, Val: `"a"`},
+			Op: AND,
+			Right: &CondComp{Ident:"t2.B", CondOp: GE, Val: `-2345`}})
 		log.Debugf("cond: %s", c)
 
-		p = NewParser(strings.NewReader(`(A AND B) OR (C AND D)`))
+		p = NewParser(strings.NewReader(`t1.A = "aa aa" AND t2.B <= -.23 AND C = "c" AND t1.t2.D = -09`))
+		c, err = p.parseCondTree()
+		So(err, ShouldBeNil)
+		chk := &CondConj{
+			Left: &CondComp{Ident:"t1.A", CondOp: EQ, Val: `"aa aa"`}, Op: AND,
+			Right: &CondConj{
+				Left: &CondComp{Ident:"t2.B", CondOp: LE, Val: `-.23`}, Op: AND,
+				Right: &CondConj{
+					Left: &CondComp{Ident:"C", CondOp: EQ, Val: `"c"`}, Op: AND,
+					Right: &CondComp{Ident:"t1.t2.D", CondOp: EQ, Val: `-09`}}}}
+		So(c.String(), ShouldEqual, chk.String())
+		log.Debugf("cond: %s", c)
+
+		p = NewParser(strings.NewReader(`(t1.A != "a" AND t2.B >= -2345)`))
 		c, err = p.parseCondTree()
 		So(err, ShouldBeNil)
 		So(c, ShouldResemble, &CondConj{
-			Left: &CondConj{Left: &CondComp{Ident:"A"}, Op: AND, Right: &CondComp{Ident:"B"}},
-			Op: OR,
-			Right: &CondConj{Left: &CondComp{Ident:"C"}, Op: AND, Right: &CondComp{Ident:"D"}},
-		})
+			Left: &CondComp{Ident:"t1.A", CondOp: NE, Val: `"a"`},
+			Op: AND,
+			Right: &CondComp{Ident:"t2.B", CondOp: GE, Val: `-2345`}})
 		log.Debugf("cond: %s", c)
 
-		p = NewParser(strings.NewReader(`(A AND B) OR (C AND (D OR E) AND F)`))
+		p = NewParser(strings.NewReader(`(t1.A != "a" AND t2.B >= -2345) OR t3.C = "cccc  "`))
 		c, err = p.parseCondTree()
 		So(err, ShouldBeNil)
-		So(c, ShouldResemble, &CondConj{
-			Left: &CondConj{Left: &CondComp{Ident:"A"}, Op: AND, Right: &CondComp{Ident:"B"}},
+		chk = &CondConj{
+			Left: &CondConj{
+				Left: &CondComp{Ident:"t1.A", CondOp: NE, Val: `"a"`},
+				Op: AND,
+				Right: &CondComp{Ident:"t2.B", CondOp: GE, Val: `-2345`}},
 			Op: OR,
-			Right: &CondConj{Left: &CondComp{Ident:"C"}, Op: AND,
-					Right: &CondConj{Left: &CondConj{Left: &CondComp{Ident:"D"}, Op: OR, Right: &CondComp{Ident:"E"}}, Op: AND,
-									Right: &CondComp{Ident:"F"}}}})
+			Right: &CondComp{Ident:"t3.C", CondOp: EQ, Val: `"cccc  "`}}
+		So(c.String(), ShouldEqual, chk.String())
+		log.Debugf("cond: %s", c)
+
+		p = NewParser(strings.NewReader(`(t1.A != "a" AND t2.B >= -2345) OR (C < 5 AND D = 'd')`))
+		c, err = p.parseCondTree()
+		So(err, ShouldBeNil)
+		chk = &CondConj{
+			Left: &CondConj{
+				Left: &CondComp{Ident:"t1.A", CondOp: NE, Val: `"a"`},
+				Op: AND,
+				Right: &CondComp{Ident:"t2.B", CondOp: GE, Val: `-2345`}},
+			Op: OR,
+			Right: &CondConj{
+				Left: &CondComp{Ident:"C", CondOp: LT, Val: `5`},
+				Op: AND,
+				Right: &CondComp{Ident:"D", CondOp: EQ, Val: `'d'`}}}
+		So(c.String(), ShouldEqual, chk.String())
+		log.Debugf("cond: %s", c)
+
+		p = NewParser(strings.NewReader(`(t1.A != "a" AND t2.B >= -2345) OR (C < 5 AND (D = 'd' OR E = 'e') AND F = 'f')`))
+		c, err = p.parseCondTree()
+		So(err, ShouldBeNil)
+		chk = &CondConj{
+			Left: &CondConj{
+				Left: &CondComp{Ident:"t1.A", CondOp: NE, Val: `"a"`},
+				Op: AND,
+				Right: &CondComp{Ident:"t2.B", CondOp: GE, Val: `-2345`}},
+			Op: OR,
+			Right: &CondConj{
+				Left: &CondComp{Ident:"C", CondOp: LT, Val: `5`},
+				Op: AND,
+				Right: &CondConj{
+					Left: &CondConj{
+						Left: &CondComp{Ident:"D", CondOp: EQ, Val: `'d'`},
+						Op: OR,
+						Right: &CondComp{Ident:"E", CondOp: EQ, Val: `'e'`}},
+					Op: AND,
+					Right: &CondComp{Ident:"F", CondOp: EQ, Val: `'f'`}}}}
+		So(c.String(), ShouldEqual, chk.String())
 		log.Debugf("cond: %s", c)
 
 	})
