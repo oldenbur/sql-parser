@@ -1,0 +1,56 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"path": "github.com/araddon/gou",
+			"revision": "dc855b3278e170447f71402abf90609da4016dc4",
+			"revisionTime": "2015-08-19T15:50:06-07:00"
+		},
+		{
+			"path": "github.com/bitly/go-hostpool",
+			"revision": "d0e59c22a56e8dadfed24f74f452cea5a52722d2",
+			"revisionTime": "2015-03-31T09:04:00-04:00"
+		},
+		{
+			"path": "github.com/cihub/seelog",
+			"revision": "5841159c495ad98691aac2bf90113c040e62bac2",
+			"revisionTime": "2015-09-30T21:49:31+03:00"
+		},
+		{
+			"path": "github.com/jtolds/gls",
+			"revision": "9a4a02dbe491bef4bab3c24fd9f3087d6c4c6690",
+			"revisionTime": "2015-04-01T00:43:43-06:00"
+		},
+		{
+			"path": "github.com/mattbaird/elastigo/lib",
+			"revision": "e207a2cd080dd331e5a607db34041ff86e2d71fc",
+			"revisionTime": "2015-08-24T15:13:37-06:00"
+		},
+		{
+			"path": "github.com/smartystreets/assertions",
+			"revision": "01fedaa993c0a9f9aa55111501cd7c81a49e812e",
+			"revisionTime": "2015-10-01T20:27:20-06:00"
+		},
+		{
+			"path": "github.com/smartystreets/assertions/internal/oglematchers",
+			"revision": "01fedaa993c0a9f9aa55111501cd7c81a49e812e",
+			"revisionTime": "2015-10-01T20:27:20-06:00"
+		},
+		{
+			"path": "github.com/smartystreets/goconvey/convey",
+			"revision": "09c4f296d7a270239bcb6f59ab1771501e5a14ec",
+			"revisionTime": "2016-01-16T15:20:59-07:00"
+		},
+		{
+			"path": "github.com/smartystreets/goconvey/convey/gotest",
+			"revision": "09c4f296d7a270239bcb6f59ab1771501e5a14ec",
+			"revisionTime": "2016-01-16T15:20:59-07:00"
+		},
+		{
+			"path": "github.com/smartystreets/goconvey/convey/reporting",
+			"revision": "09c4f296d7a270239bcb6f59ab1771501e5a14ec",
+			"revisionTime": "2016-01-16T15:20:59-07:00"
+		}
+	]
+}
