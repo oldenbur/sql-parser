@@ -1,0 +1,47 @@
+{
+  "took": 21,
+  "timed_out": false,
+  "_shards": {
+    "total": 2,
+    "successful": 2,
+    "failed": 0
+  },
+  "hits": {
+    "total": 4012641,
+    "max_score": 1,
+    "hits": [
+      {
+        "_index": "logs-2016-01-15",
+        "_type": "logs",
+        "_id": "c97f957e-bbc3-11e5-9988-005056a81923",
+        "_score": 1,
+        "_source": {
+          "logSourceId": 9601,
+          "msgSourceTypeId": 105,
+          "mpeRuleId": 30268,
+          "commonEventId": 1034468,
+          "msgClassId": 2200,
+          "logDate": "2016-01-15T11:50:33.2868064",
+          "normalDate": "2016-01-15T11:50:33.2868064Z",
+          "originIp": "11.175.214.131"
+        }
+      },
+      {
+        "_index": "logs-2016-01-15",
+        "_type": "logs",
+        "_id": "c97f9654-bbc3-11e5-9988-005056a81923",
+        "_score": 1,
+        "_source": {
+          "logSourceId": 4376,
+          "msgSourceTypeId": 105,
+          "mpeRuleId": 1000018,
+          "commonEventId": 1000000,
+          "msgClassId": 2900,
+          "logDate": "2016-01-15T11:50:33.2868064",
+          "normalDate": "2016-01-15T11:50:33.2868064Z",
+          "originIp": "104.17.121.201"
+        }
+      }
+    ]
+  }
+}

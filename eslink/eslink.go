@@ -31,15 +31,19 @@ func conn() error {
 	return nil
 }
 
-type BulkIndex struct {
+type BulkRecord struct {
 	Index string `json:"_index"`
 	Type string `json:"_type"`
 	Id string `json:"_id"`
 }
 
+type BulkIndex struct {
+	Index BulkRecord `json:"index"`
+}
+
 func bulkJson() error {
 
-	jsonFile := "/Users/paul.oldenburg/go/src/github.com/oldenbur/sql-parser/logs_search_jq.json"
+	jsonFile := "/Users/paul.oldenburg/go/src/github.com/oldenbur/sql-parser/logs_search_sm.json"
 	log.Debugf("jsonFile: %s", jsonFile)
 
 	f, err := os.Open(jsonFile)
@@ -68,9 +72,11 @@ func bulkJson() error {
 //			hit.StrVal("_index"), hit.StrVal("_type"), hit.StrVal("_id"))
 
 		bi := &BulkIndex{
-			Index: hit.StrVal("_index"),
-			Type: hit.StrVal("_type"),
-			Id: hit.StrVal("_id"),
+			Index: BulkRecord{
+				Index: hit.StrVal("_index"),
+				Type: hit.StrVal("_type"),
+				Id: hit.StrVal("_id"),
+			},
 		}
 		bij, err := json.Marshal(bi)
 		if err != nil {
@@ -97,7 +103,7 @@ func bulkJson() error {
 //	}
 
 	c := es.NewConn()
-	resp, err := c.DoCommand("POST", "/_bulk", nil, b)
+	resp, err := c.DoCommand("POST", "/_bulk", nil, &b)
 	if err != nil {
 		return log.Error("conn error in _bulk: ", err)
 	}
