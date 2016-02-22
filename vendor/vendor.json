@@ -28,6 +28,11 @@
 			"revisionTime": "2015-08-24T15:13:37-06:00"
 		},
 		{
+			"path": "github.com/oldenbur/gostree",
+			"revision": "71776e1bbb9021d7cbe2b1cea9c00aed20ba66bd",
+			"revisionTime": "2016-02-21T21:07:23-07:00"
+		},
+		{
 			"path": "github.com/smartystreets/assertions",
 			"revision": "01fedaa993c0a9f9aa55111501cd7c81a49e812e",
 			"revisionTime": "2015-10-01T20:27:20-06:00"
