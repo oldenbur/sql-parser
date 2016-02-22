@@ -56,6 +56,11 @@
 			"path": "github.com/smartystreets/goconvey/convey/reporting",
 			"revision": "09c4f296d7a270239bcb6f59ab1771501e5a14ec",
 			"revisionTime": "2016-01-16T15:20:59-07:00"
+		},
+		{
+			"path": "gopkg.in/yaml.v2",
+			"revision": "53feefa2559fb8dfa8d81baad31be332c97d6c77",
+			"revisionTime": "2015-09-24T11:23:14-03:00"
 		}
 	]
 }
