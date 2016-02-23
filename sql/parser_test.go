@@ -58,6 +58,17 @@ func TestParser_ParseSimpleSelect(t *testing.T) {
 		})
 	})
 
+	Convey("Multi-field statement with WHERE\n", t, func() {
+		stmt, err := testParse(`SELECT first_name, last_name, age FROM my_table WHERE first_name = "bucky"`)
+		So(err, ShouldBeNil)
+		log.Debug("SQL: ", stmt)
+		So(stmt, ShouldResemble, &SelectStatement{
+			FieldList: Fields{Field{Name: "first_name"}, Field{Name: "last_name"}, Field{Name: "age"}},
+			TableList: Fields{Field{Name: "my_table"}},
+			WhereCond: &CondComp{Ident: "first_name", CondOp: EQ, Val: "\"bucky\""},
+		})
+	})
+
 	Convey("Expected SELECT", t, func() {
 		_, err := testParse(`foo`)
 		So(errstring(err), ShouldEqual, `found "foo", expected SELECT`)

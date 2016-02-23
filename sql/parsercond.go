@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-type Cond interface{
+type Cond interface {
 	String() string
 }
 
@@ -16,7 +16,6 @@ type CondComp struct {
 }
 
 func (c CondComp) String() string {
-//	return fmt.Sprintf("%s", c.Ident)
 	return fmt.Sprintf("%s %s %s", c.Ident, c.CondOp, c.Val)
 }
 
