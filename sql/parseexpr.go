@@ -34,7 +34,7 @@ type FuncCallExpr struct {
 	Args []Expr
 }
 
-func (f *FuncCallExpr) String() string {
+func (f FuncCallExpr) String() string {
 
 	var argList string = ""
 	for i, a := range f.Args {
@@ -52,7 +52,7 @@ type StringExpr struct {
 	Val string
 }
 
-func (s *StringExpr) String() string {
+func (s StringExpr) String() string {
 	return s.Val
 }
 
@@ -60,7 +60,7 @@ type NumExpr struct {
 	Val float64
 }
 
-func (n *NumExpr) String() string {
+func (n NumExpr) String() string {
 	return fmt.Sprintf("%f", n.Val)
 }
 

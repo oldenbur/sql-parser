@@ -65,7 +65,7 @@ func TestParser_ParseSimpleSelect(t *testing.T) {
 		So(stmt, ShouldResemble, &SelectStatement{
 			FieldList: Fields{Field{Name: "first_name"}, Field{Name: "last_name"}, Field{Name: "age"}},
 			TableList: Fields{Field{Name: "my_table"}},
-			WhereCond: &CondComp{Ident: "first_name", CondOp: EQ, Val: "\"bucky\""},
+			WhereCond: &CondComp{Ident: "first_name", CondOp: EQ, Val: &StringExpr{Val: `"bucky"`}},
 		})
 	})
 
