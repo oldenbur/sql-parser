@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	log "github.com/cihub/seelog"
-	T "../testutil"
+	T "github.com/oldenbur/sql-parser/testutil"
 	. "github.com/smartystreets/goconvey/convey"
 )
 

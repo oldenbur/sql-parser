@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	log "github.com/cihub/seelog"
-	T "github.com/oldenbur/sql-parser/testutil"
 	. "github.com/smartystreets/goconvey/convey"
+	T "github.com/oldenbur/sql-parser/testutil"
+	log "github.com/cihub/seelog"
 )
 
 func init() { T.ConfigureTestLogger() }
@@ -92,7 +92,4 @@ func TestFuncCall(t *testing.T) {
 		log.Debugf("f: %v", f)
 		So(err, ShouldResemble, fmt.Errorf(`expected COMMA or PAREN_R after FuncName arg 1, got "strang"`))
 	})
-
-
-
 }
