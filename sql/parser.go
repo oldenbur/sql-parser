@@ -36,10 +36,16 @@ func (f Fields) String() string {
 type SelectStatement struct {
 	FieldList Fields
 	TableList Fields
+	WhereCond Cond
 }
 
 func (s SelectStatement) String() string {
-	return fmt.Sprintf("SELECT %s FROM %s", s.FieldList.String(), s.TableList.String())
+
+	where := ""
+	if s.WhereCond != nil {
+		where = fmt.Sprintf(" WHERE %s", s.WhereCond)
+	}
+	return fmt.Sprintf("SELECT %s FROM %s%s", s.FieldList.String(), s.TableList.String(), where)
 }
 
 // Parser represents a parser.
@@ -83,8 +89,14 @@ func (p *Parser) Parse() (*SelectStatement, error) {
 	}
 	stmt.TableList = tables
 
-	// Next we should see the "HWERE" keyword.
-	if tok, lit := p.scanIgnoreWhitespace(); tok != WHERE && tok != EOF{
+	// Next we should see the "WHERE" keyword.
+	tok, lit := p.scanIgnoreWhitespace()
+	if tok == WHERE {
+		stmt.WhereCond, err = p.parseCondTree()
+		if err != nil {
+			return nil, err
+		}
+	} else if tok != EOF {
 		return nil, fmt.Errorf("found %q, expected WHERE", lit)
 	}
 

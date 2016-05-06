@@ -16,7 +16,7 @@ func TestScanner(t *testing.T) {
 	defer log.Flush()
 
 	Convey("Special tokens\n", t, func() {
-		testScanString(``, EOF, ``)
+		testScanString(``, EOF, `EOF`)
 		testScanString(`#`, ILLEGAL, `#`)
 		testScanString(` `, WS, ` `)
 		testScanString(`    `, WS, `    `)

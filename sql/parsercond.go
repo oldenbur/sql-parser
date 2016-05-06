@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-type Cond interface{
+type Cond interface {
 	String() string
 }
 
@@ -12,11 +12,10 @@ type Cond interface{
 type CondComp struct {
 	Ident string
 	CondOp Token  // e.g. =, <=
-	Val string
+	Val Expr
 }
 
 func (c CondComp) String() string {
-//	return fmt.Sprintf("%s", c.Ident)
 	return fmt.Sprintf("%s %s %s", c.Ident, c.CondOp, c.Val)
 }
 
@@ -89,9 +88,6 @@ func (p *Parser) parseCondTree() (Cond, error) {
 // CondComp structure is returned, otherwise an error.
 func (p *Parser) parseCondComp() (*CondComp, error) {
 
-	var ident, val string
-	var op Token
-
 	tok, ident := p.scanIgnoreWhitespace()
 	if tok != IDENT {
 		return nil, fmt.Errorf(`expected IDENT, got "%s"`, ident)
@@ -102,12 +98,12 @@ func (p *Parser) parseCondComp() (*CondComp, error) {
 		return nil, fmt.Errorf(`expected operator, got "%s"`, lit)
 	}
 
-	tok, val = p.scanIgnoreWhitespace()
-	if tok != STRING && tok != NUMBER {
-		return nil, fmt.Errorf(`expected NUMBER or STRING, got "%s"`, val)
+	expr, err := p.parseExpr()
+	if err != nil {
+		return nil, err
 	}
 
-	return &CondComp{Ident: ident, CondOp: op, Val: val}, nil
+	return &CondComp{Ident: ident, CondOp: op, Val: expr}, nil
 }
 
 func isOperator(tok Token) bool {
