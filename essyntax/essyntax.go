@@ -6,13 +6,6 @@ import (
 	"github.com/oldenbur/sql-parser/sql"
 )
 
-func ElasticSearchQuery(s *sql.SelectStatement) (string, error) {
-
-
-
-	return "", nil
-}
-
 // genCondClause returns an elasticsearch query clause generated from the specified clause,
 // which can either be a conjuction or a comparison
 func genCondClause(where sql.Cond) (string, error) {
