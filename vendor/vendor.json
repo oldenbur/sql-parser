@@ -28,6 +28,11 @@
 			"revisionTime": "2015-08-24T15:13:37-06:00"
 		},
 		{
+			"path": "github.com/oldenbur/gostree",
+			"revision": "71776e1bbb9021d7cbe2b1cea9c00aed20ba66bd",
+			"revisionTime": "2016-02-21T21:07:23-07:00"
+		},
+		{
 			"path": "github.com/smartystreets/assertions",
 			"revision": "01fedaa993c0a9f9aa55111501cd7c81a49e812e",
 			"revisionTime": "2015-10-01T20:27:20-06:00"
@@ -51,6 +56,11 @@
 			"path": "github.com/smartystreets/goconvey/convey/reporting",
 			"revision": "09c4f296d7a270239bcb6f59ab1771501e5a14ec",
 			"revisionTime": "2016-01-16T15:20:59-07:00"
+		},
+		{
+			"path": "gopkg.in/yaml.v2",
+			"revision": "53feefa2559fb8dfa8d81baad31be332c97d6c77",
+			"revisionTime": "2015-09-24T11:23:14-03:00"
 		}
 	]
 }
